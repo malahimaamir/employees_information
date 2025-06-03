@@ -3,10 +3,13 @@ const mongoose = require("mongoose");
 const path = require("path");
 
 const app = express();
-mongoose.connect("mongodb://localhost:27017/record", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  "mongodb+srv://malahimaamir:53OsMDOqMmm900YX@employeedb.3wj2a4n.mongodb.net/?retryWrites=true&w=majority&appName=employeeDB",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
