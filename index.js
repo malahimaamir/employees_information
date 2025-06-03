@@ -1,15 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
+require("dotenv").config();
 
 const app = express();
-mongoose.connect(
-  "mongodb+srv://malahimaamir:53OsMDOqMmm900YX@employeedb.3wj2a4n.mongodb.net/?retryWrites=true&w=majority&appName=employeeDB",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -30,7 +29,7 @@ app.get("/", async (req, res) => {
         ${user.name} (${user.age} years old)
         <form method="POST" action="/delete" style="display:inline">
           <input type="hidden" name="id" value="${user._id}" />
-          <button type="submit">Delete</button>
+          <button type="submit" class="delete-btn">Delete</button>
         </form>
       </li>`
     )
@@ -167,15 +166,16 @@ app.get("/", async (req, res) => {
 app.post("/add", async (req, res) => {
   const { name, age } = req.body;
   await UserModel.create({ name, age });
-  res.redirect("/");
+  res.redirect("/?action=added");
 });
 
 app.post("/delete", async (req, res) => {
   const { id } = req.body;
   await UserModel.findByIdAndDelete(id);
-  res.redirect("/");
+  res.redirect("/?action=deleted");
 });
 
-app.listen(3001, () => {
-  console.log("Server is running on http://localhost:3001");
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
